@@ -6,15 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Roy&#39;s Blog</title>
+  <title>Web application series 2 | Roy&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Roy&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="In the previous blog, I have created a simple web app. Now let’s create more funcitons, as below enhancements:  The backend will add CRUD functions for products. The frontend will add router function,">
+<meta name="keywords" content="Web Application">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web application series 2">
+<meta property="og:url" content="http://yoursite.com/2018/05/08/web-tour2/index.html">
 <meta property="og:site_name" content="Roy&#39;s Blog">
+<meta property="og:description" content="In the previous blog, I have created a simple web app. Now let’s create more funcitons, as below enhancements:  The backend will add CRUD functions for products. The frontend will add router function,">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/2018/05/08/web-tour2/web-tour2.gif">
+<meta property="og:updated_time" content="2018-05-08T06:24:50.829Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Roy&#39;s Blog">
+<meta name="twitter:title" content="Web application series 2">
+<meta name="twitter:description" content="In the previous blog, I have created a simple web app. Now let’s create more funcitons, as below enhancements:  The backend will add CRUD functions for products. The frontend will add router function,">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/08/web-tour2/web-tour2.gif">
   
     <link rel="alternative" href="/atom.xml" title="Roy&#39;s Blog" type="application/atom+xml">
   
@@ -140,16 +147,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-web-tour2" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-web-tour2" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/08/web-tour2/">Web application series 2</a>
+    <h1 class="article-title" itemprop="name">
+      Web application series 2
     </h1>
   
 
@@ -169,11 +174,47 @@
 </ol>
 <hr>
 <p><strong>Part I: Backend Change</strong><br>Let’s do the backend change first. Modify the previous created ProductController.java, add four APIs to create product, display product detail information, update product properities, and delete product. The code as below:</p>
-        
-          <a class="article-more-a" href="/2018/05/08/web-tour2/#more">more >></a>
-        
+<a id="more"></a>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">package com.example.myweb;  </span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;  </span><br><span class="line">import org.springframework.stereotype.Controller;  </span><br><span class="line">import org.springframework.ui.Model;  </span><br><span class="line">import org.springframework.web.bind.annotation.PathVariable;  </span><br><span class="line">import org.springframework.web.bind.annotation.RequestMapping;  </span><br><span class="line">import org.springframework.web.bind.annotation.GetMapping;  </span><br><span class="line">import org.springframework.web.bind.annotation.RequestMethod;  </span><br><span class="line">import org.springframework.web.bind.annotation.RestController;  </span><br><span class="line">import org.springframework.web.bind.annotation.RequestBody;  </span><br><span class="line">import org.springframework.web.bind.annotation.CrossOrigin;  </span><br><span class="line">import java.util.List;  </span><br><span class="line">  </span><br><span class="line">@RestController  </span><br><span class="line">@CrossOrigin(origins =&quot;http://localhost:4200&quot;)   //这个用于解决跨域访问的问题  </span><br><span class="line">public class ProductController &#123;  </span><br><span class="line">    private ProductRepository productRepository;  </span><br><span class="line">    @Autowired  </span><br><span class="line">    public ProductController(  </span><br><span class="line">            ProductRepository productRepository) &#123;  </span><br><span class="line">        this.productRepository= productRepository;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    @RequestMapping(&quot;/all&quot;)  </span><br><span class="line">    public List allProducts(Model model) &#123;  </span><br><span class="line">        List&lt;Product&gt; productList =  </span><br><span class="line">                productRepository.findAll();  </span><br><span class="line">        return productList;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    @GetMapping(&quot;/productdetail/&#123;id&#125;&quot;)  </span><br><span class="line">    public Product getProduct(@PathVariable(&quot;id&quot;) long id) &#123;  </span><br><span class="line">        Product product =  </span><br><span class="line">                productRepository.getOne(id);  </span><br><span class="line">        return product;  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    @RequestMapping(value = &quot;/updateproduct&quot;, method = RequestMethod.PUT)  </span><br><span class="line">    public void updateProduct(  </span><br><span class="line">            @RequestBody Product product) &#123;  </span><br><span class="line">        Product updatedProduct = new Product();  </span><br><span class="line">        updatedProduct.setId(product.getId());  </span><br><span class="line">        updatedProduct.setName(product.getName());  </span><br><span class="line">        updatedProduct.setDescription(product.getDescription());  </span><br><span class="line">        this.productRepository.save(updatedProduct);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    @RequestMapping(value = &quot;/createproduct&quot;, method = RequestMethod.PUT)  </span><br><span class="line">    public void createProduct(  </span><br><span class="line">            @RequestBody Product product) &#123;  </span><br><span class="line">        Product newProduct = new Product();  </span><br><span class="line">        newProduct.setName(product.getName());  </span><br><span class="line">        newProduct.setDescription(product.getDescription());  </span><br><span class="line">        this.productRepository.save(newProduct);  </span><br><span class="line">    &#125;  </span><br><span class="line">  </span><br><span class="line">    @RequestMapping(value = &quot;/deleteproduct&quot;, method = RequestMethod.PUT)  </span><br><span class="line">    public void deleteProduct(  </span><br><span class="line">            @RequestBody Product product) &#123;  </span><br><span class="line">        this.productRepository.deleteById(product.getId());  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Run the web service in the IDEA-&gt;Maven projects-&gt;Spring Boot: Run</p>
+<hr>
+<p><strong>Part II: Frontend Change</strong><br>For the frontend, will add the router function, this can enable the routes to different module.<br>In the my-app/ folder, type the below command in the CLI to create a AppRoutingModule:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate module app-routing --flat --module=app</span><br></pre></td></tr></table></figure></p>
+<p>Modify the new generated app-routing.module.ts under my-app/src/app, insert the routes, as below code:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import &#123; NgModule &#125;             from &apos;@angular/core&apos;;  </span><br><span class="line">import &#123; RouterModule, Routes &#125; from &apos;@angular/router&apos;;  </span><br><span class="line">import &#123; ProductsComponent &#125;      from &apos;./products/products.component&apos;;  </span><br><span class="line">import &#123; ProductDetailComponent &#125;      from &apos;./product-detail/product-detail.component&apos;;  </span><br><span class="line">import &#123; AddProductComponent &#125;      from &apos;./add-product/add-product.component&apos;;  </span><br><span class="line">  </span><br><span class="line">const routes: Routes = [  </span><br><span class="line">  &#123; path: &apos;products&apos;, component: ProductsComponent &#125;,  </span><br><span class="line">  &#123; path: &apos;productdetail/:id&apos;, component: ProductDetailComponent &#125;,  </span><br><span class="line">  &#123; path: &apos;createproduct&apos;, component: AddProductComponent &#125;  </span><br><span class="line">];  </span><br><span class="line">  </span><br><span class="line">@NgModule(&#123;  </span><br><span class="line">  imports: [ RouterModule.forRoot(routes) ],  </span><br><span class="line">  exports: [ RouterModule ]  </span><br><span class="line">&#125;)  </span><br><span class="line">export class AppRoutingModule &#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>The routes in the code are point to different module.</p>
+<p>For the products.module.ts, do the below change to add several methods to invoke the backend new APIs, as below code:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Injectable &#125; from &apos;@angular/core&apos;;    </span><br><span class="line">import &#123; Observable &#125; from &apos;rxjs/Observable&apos;;    </span><br><span class="line">import &#123; HttpClient, HttpHeaders &#125; from &apos;@angular/common/http&apos;;    </span><br><span class="line">import &#123; Product &#125; from &apos;./product&apos;;    </span><br><span class="line">  </span><br><span class="line">const httpOptions = &#123;  </span><br><span class="line">  headers: new HttpHeaders(&#123; &apos;Content-Type&apos;: &apos;application/json&apos; &#125;)  </span><br><span class="line">&#125;;  </span><br><span class="line">    </span><br><span class="line">@Injectable()    </span><br><span class="line">export class ProductService &#123;    </span><br><span class="line">  private productsUrl =&apos;http://localhost:9090/all&apos;;  //这是REST API的URL    </span><br><span class="line">  private productDetailUrl =&apos;http://localhost:9090/productdetail&apos;;  </span><br><span class="line">  private productUpdateUrl =&apos;http://localhost:9090/updateproduct&apos;;  </span><br><span class="line">  private productCreateUrl =&apos;http://localhost:9090/createproduct&apos;;  </span><br><span class="line">  private productDeleteUrl =&apos;http://localhost:9090/deleteproduct&apos;;  </span><br><span class="line">    </span><br><span class="line">  constructor(private http:HttpClient) &#123; &#125;    </span><br><span class="line">    </span><br><span class="line">  getProducts(): Observable&lt;Product[]&gt; &#123;    </span><br><span class="line">    return this.http.get&lt;Product[]&gt;(this.productsUrl)    </span><br><span class="line">  &#125;    </span><br><span class="line">  </span><br><span class="line">  /** GET hero by id. Will 404 if id not found */  </span><br><span class="line">  getProduct(id: number): Observable&lt;Product&gt; &#123;  </span><br><span class="line">    const url = `$&#123;this.productDetailUrl&#125;/$&#123;id&#125;`;  </span><br><span class="line">    return this.http.get&lt;Product&gt;(url);  </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line">  /** PUT: update the product on the server */  </span><br><span class="line">  updateProduct (product: Product): Observable&lt;any&gt; &#123;  </span><br><span class="line">    return this.http.put(this.productUpdateUrl, product, httpOptions);  </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line">  /** PUT: add a new product to the server */  </span><br><span class="line">  createProduct (product: Product): Observable&lt;Product&gt; &#123;  </span><br><span class="line">    return this.http.put&lt;Product&gt;(this.productCreateUrl, product, httpOptions);  </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line">  /** PUT: add a new product to the server */  </span><br><span class="line">  deleteProduct (product: Product): Observable&lt;Product&gt; &#123;  </span><br><span class="line">    return this.http.put&lt;Product&gt;(this.productDeleteUrl, product, httpOptions);  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>For the products.module.html, add a link to each product, to the product-detail module, as the below code:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;h2&gt;Products&lt;/h2&gt;    </span><br><span class="line">&lt;ul class=&quot;products&quot;&gt;    </span><br><span class="line">  &lt;li *ngFor=&quot;let product of products&quot;&gt;  </span><br><span class="line">    &lt;a routerLink=&quot;/productdetail/&#123;&#123;product.id&#125;&#125;&quot;&gt;   </span><br><span class="line">      &lt;span class=&quot;badge&quot;&gt;&#123;&#123;product.id&#125;&#125;&lt;/span&gt; &#123;&#123;product.name&#125;&#125;    </span><br><span class="line">    &lt;/a&gt;  </span><br><span class="line">  &lt;/li&gt;    </span><br><span class="line">&lt;/ul&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Update the CSS for the products, as below:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">.products &#123;  </span><br><span class="line">  margin: 0 0 2em 0;  </span><br><span class="line">  list-style-type: none;  </span><br><span class="line">  padding: 0;  </span><br><span class="line">  width: 15em;  </span><br><span class="line">&#125;  </span><br><span class="line">.products li &#123;  </span><br><span class="line">  position: relative;  </span><br><span class="line">  cursor: pointer;  </span><br><span class="line">  background-color: #EEE;  </span><br><span class="line">  margin: .5em;  </span><br><span class="line">  padding: .3em 0;  </span><br><span class="line">  height: 1.6em;  </span><br><span class="line">  border-radius: 4px;  </span><br><span class="line">&#125;  </span><br><span class="line">   </span><br><span class="line">.products li:hover &#123;  </span><br><span class="line">  color: #607D8B;  </span><br><span class="line">  background-color: #DDD;  </span><br><span class="line">  left: .1em;  </span><br><span class="line">&#125;  </span><br><span class="line">   </span><br><span class="line">.products a &#123;  </span><br><span class="line">  color: #888;  </span><br><span class="line">  text-decoration: none;  </span><br><span class="line">  position: relative;  </span><br><span class="line">  display: block;  </span><br><span class="line">  width: 250px;  </span><br><span class="line">&#125;  </span><br><span class="line">   </span><br><span class="line">.products a:hover &#123;  </span><br><span class="line">  color:#607D8B;  </span><br><span class="line">&#125;  </span><br><span class="line">   </span><br><span class="line">.products .badge &#123;  </span><br><span class="line">  display: inline-block;  </span><br><span class="line">  font-size: small;  </span><br><span class="line">  color: white;  </span><br><span class="line">  padding: 0.8em 0.7em 0 0.7em;  </span><br><span class="line">  background-color: #607D8B;  </span><br><span class="line">  line-height: 1em;  </span><br><span class="line">  position: relative;  </span><br><span class="line">  left: -1px;  </span><br><span class="line">  top: -4px;  </span><br><span class="line">  height: 1.8em;  </span><br><span class="line">  min-width: 16px;  </span><br><span class="line">  text-align: right;  </span><br><span class="line">  margin-right: .8em;  </span><br><span class="line">  border-radius: 4px 0 0 4px;  </span><br><span class="line">&#125;  </span><br><span class="line">   </span><br><span class="line">button &#123;  </span><br><span class="line">  background-color: #eee;  </span><br><span class="line">  border: none;  </span><br><span class="line">  padding: 5px 10px;  </span><br><span class="line">  border-radius: 4px;  </span><br><span class="line">  cursor: pointer;  </span><br><span class="line">  cursor: hand;  </span><br><span class="line">  font-family: Arial;  </span><br><span class="line">&#125;  </span><br><span class="line">   </span><br><span class="line">button:hover &#123;  </span><br><span class="line">  background-color: #cfd8dc;  </span><br><span class="line">&#125;  </span><br><span class="line">   </span><br><span class="line">button.delete &#123;  </span><br><span class="line">  position: relative;  </span><br><span class="line">  left: 194px;  </span><br><span class="line">  top: -32px;  </span><br><span class="line">  background-color: gray !important;  </span><br><span class="line">  color: white;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Modify the product-detail module, add the delete and update funcitons, these functions will call the related methods in product.service.ts:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Component, OnInit, Input &#125; from &apos;@angular/core&apos;;    </span><br><span class="line">import &#123; Product &#125; from &apos;../product&apos;;    </span><br><span class="line">import &#123; ActivatedRoute &#125; from &apos;@angular/router&apos;;  </span><br><span class="line">import &#123; Location &#125; from &apos;@angular/common&apos;;  </span><br><span class="line">import &#123; ProductService &#125;  from &apos;../product.service&apos;;  </span><br><span class="line">@Component(&#123;    </span><br><span class="line">  selector:&apos;app-product-detail&apos;,    </span><br><span class="line">  templateUrl:&apos;./product-detail.component.html&apos;,    </span><br><span class="line">  styleUrls:[&apos;./product-detail.component.css&apos;]    </span><br><span class="line">&#125;)    </span><br><span class="line">    </span><br><span class="line">export class ProductDetailComponent implements OnInit &#123;    </span><br><span class="line">  product: Product;       </span><br><span class="line">  constructor(private route: ActivatedRoute,  </span><br><span class="line">    private productService: ProductService,  </span><br><span class="line">    private location: Location) &#123; &#125;    </span><br><span class="line">    </span><br><span class="line">  ngOnInit() &#123;    </span><br><span class="line">    this.getProduct()  </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line">  getProduct() &#123;  </span><br><span class="line">    const id = +this.route.snapshot.paramMap.get(&apos;id&apos;);  </span><br><span class="line">    this.productService.getProduct(id)  </span><br><span class="line">      .subscribe(product =&gt; this.product = product);    </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line">  goBack(): void &#123;  </span><br><span class="line">    this.location.back();  </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line">  save(): void &#123;  </span><br><span class="line">   this.productService.updateProduct(this.product)  </span><br><span class="line">     .subscribe(() =&gt; this.goBack());  </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line">  delete(): void &#123;  </span><br><span class="line">   this.productService.deleteProduct(this.product)  </span><br><span class="line">     .subscribe(() =&gt; this.goBack());  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Modify the related product-detail.module.html, add some buttons:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;div *ngIf=&quot;product&quot;&gt;    </span><br><span class="line">  &lt;h2&gt;&#123;&#123; product.name |uppercase &#125;&#125; Details&lt;/h2&gt;    </span><br><span class="line">  &lt;div&gt;&lt;span&gt;id:&lt;/span&gt;&#123;&#123;product.id&#125;&#125;&lt;/div&gt;    </span><br><span class="line">  &lt;div&gt;    </span><br><span class="line">    &lt;label&gt;name:    </span><br><span class="line">      &lt;input [(ngModel)]=&quot;product.name&quot; placeholder=&quot;name&quot;/&gt;    </span><br><span class="line">    &lt;/label&gt;    </span><br><span class="line">  &lt;/div&gt;    </span><br><span class="line">  &lt;div&gt;    </span><br><span class="line">    &lt;label&gt;description:    </span><br><span class="line">      &lt;input [(ngModel)]=&quot;product.description&quot; placeholder=&quot;description&quot;/&gt;    </span><br><span class="line">    &lt;/label&gt;    </span><br><span class="line">  &lt;/div&gt;    </span><br><span class="line">  &lt;button (click)=&quot;save()&quot;&gt;save&lt;/button&gt;  </span><br><span class="line">  &lt;button (click)=&quot;delete()&quot;&gt;delete&lt;/button&gt;  </span><br><span class="line">  &lt;button (click)=&quot;goBack()&quot;&gt;go back&lt;/button&gt;  </span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Add a new add-product module, for the new product creation. In the my-app/ folder, input below command:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng generate component add-product</span><br></pre></td></tr></table></figure></p>
+<p>Modify the new created add-product.module.ts, as below:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Component, OnInit &#125; from &apos;@angular/core&apos;;  </span><br><span class="line">import &#123; Product &#125; from &apos;../product&apos;;    </span><br><span class="line">import &#123; ActivatedRoute &#125; from &apos;@angular/router&apos;;  </span><br><span class="line">import &#123; Location &#125; from &apos;@angular/common&apos;;  </span><br><span class="line">import &#123; ProductService &#125;  from &apos;../product.service&apos;;  </span><br><span class="line">  </span><br><span class="line">@Component(&#123;  </span><br><span class="line">  selector: &apos;app-add-product&apos;,  </span><br><span class="line">  templateUrl: &apos;./add-product.component.html&apos;,  </span><br><span class="line">  styleUrls: [&apos;./add-product.component.css&apos;]  </span><br><span class="line">&#125;)  </span><br><span class="line">export class AddProductComponent implements OnInit &#123;  </span><br><span class="line">  constructor(private route: ActivatedRoute,  </span><br><span class="line">    private productService: ProductService,  </span><br><span class="line">    private location: Location) &#123; &#125;  </span><br><span class="line">  </span><br><span class="line">  ngOnInit() &#123;  </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line">  create(name: String, description: string): void &#123;  </span><br><span class="line">   this.productService.createProduct(&#123;name, description&#125; as Product)  </span><br><span class="line">     .subscribe(() =&gt; this.goBack());  </span><br><span class="line">  &#125;  </span><br><span class="line">  </span><br><span class="line">  goBack(): void &#123;  </span><br><span class="line">    this.location.back();  </span><br><span class="line">  &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Change the related add-product.module.html, as below:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;    </span><br><span class="line">  &lt;h2&gt;Create Product&lt;/h2&gt;    </span><br><span class="line">  &lt;div&gt;    </span><br><span class="line">    &lt;label&gt;name:    </span><br><span class="line">      &lt;input #name /&gt;    </span><br><span class="line">    &lt;/label&gt;    </span><br><span class="line">  &lt;/div&gt;    </span><br><span class="line">  &lt;div&gt;    </span><br><span class="line">    &lt;label&gt;description:    </span><br><span class="line">      &lt;input #description /&gt;    </span><br><span class="line">    &lt;/label&gt;    </span><br><span class="line">  &lt;/div&gt;    </span><br><span class="line">  &lt;button (click)=&quot;create(name.value, description.value); name.value=&apos;&apos;; description.value=&apos;&apos;&quot;&gt;create&lt;/button&gt;  </span><br><span class="line">  &lt;button (click)=&quot;goBack()&quot;&gt;go back&lt;/button&gt;  </span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure></p>
+<p>When finished, type below command in terminal:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ng serve -open</span><br></pre></td></tr></table></figure></p>
+<p>That’s all, you can see the web application run as below:<br><img src="/2018/05/08/web-tour2/web-tour2.gif" alt=""></p>
+
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -193,16 +234,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/08/web-tour2/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/08/web-tour2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/01/web-tour/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Web application series 1</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -222,155 +322,34 @@
 
 
 
+  
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="web-tour2" data-title="Web application series 2" data-url="http://yoursite.com/2018/05/08/web-tour2/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
   
-    <article id="post-web-tour" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/01/web-tour/">Web application series 1</a>
-    </h1>
   
 
-        
-        <a href="/2018/05/01/web-tour/" class="archive-article-date">
-  	<time datetime="2018-05-01T05:32:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>This is to record my study of building web application, involve many technology, such as Spring boot, Angular, MySQL, Redis, Cassandra, Keycloak, KONG APIgateway, Docker, Microservice.<br>The better way to learn something is coding by yourself, this is fun and fast to master new knowledge, so I will start it now. :)<br>The first part will start from a simple web application, to demo a use case that backend side read data from database, expose the data from REST API, the frontend will then invoke the API and show the result to the client.  </p>
-<p>The works will split in the below three parts:</p>
-<ol>
-<li>The database will use mysql  </li>
-<li>The backend will use Spring Boot, and expose REST API  </li>
-<li>The frontend will use Angular, to invoke REST API. </li>
-</ol>
-        
-          <a class="article-more-a" href="/2018/05/01/web-tour/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Web Application</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/01/web-tour/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-welcome" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/05/01/welcome/">Welcome</a>
-    </h1>
   
 
-        
-        <a href="/2018/05/01/welcome/" class="archive-article-date">
-  	<time datetime="2018-05-01T05:19:18.364Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>I am a fancier of the AI, machine learning, big data, robot, python…</p>
-<p>Here I want to share my thinkings and codes for fun. Hope to know more people that have same hobby with me.</p>
-<p>Let’s get it started.</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2018/05/01/welcome/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
+
   
 
 
@@ -393,8 +372,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
