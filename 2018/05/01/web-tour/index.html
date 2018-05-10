@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Roy&#39;s Blog">
 <meta property="og:description" content="This is to record my study of building web application, involve many technology, such as Spring boot, Angular, MySQL, Redis, Cassandra, Keycloak, KONG APIgateway, Docker, Microservice.The better way t">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-05-10T04:10:17.129Z">
+<meta property="og:updated_time" content="2018-05-10T16:01:12.599Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Web APP Series 1_A simple Frontend&#x2F;Backend Web">
 <meta name="twitter:description" content="This is to record my study of building web application, involve many technology, such as Spring boot, Angular, MySQL, Redis, Cassandra, Keycloak, KONG APIgateway, Docker, Microservice.The better way t">
@@ -159,14 +159,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>This is to record my study of building web application, involve many technology, such as Spring boot, Angular, MySQL, Redis, Cassandra, Keycloak, KONG APIgateway, Docker, Microservice.<br>The better way to learn something is coding by yourself, this is fun and fast to master new knowledge, so I will start it now. :)<br>The first part will start from a simple web application, to demo a use case that backend side read data from database, expose the data from REST API, the frontend will then invoke the API and show the result to the client.  </p>
-<p>The works will split in the below three parts:</p>
+        <p>This is to record my study of building web application, involve many technology, such as Spring boot, Angular, MySQL, Redis, Cassandra, Keycloak, KONG APIgateway, Docker, Microservice.<br>The better way to learn something is coding by yourself, this is fun and fast to master new knowledge, so I will start it now. :)<br>The first part will start from a simple web application, to demo a use case that backend side read data from database, expose the data from REST API, the frontend will then invoke the API and show the result to the client.<br><a id="more"></a><br>The works will split in the below three parts:</p>
 <ol>
 <li>The database will use mysql  </li>
 <li>The backend will use Spring Boot, and expose REST API  </li>
 <li>The frontend will use Angular, to invoke REST API. </li>
 </ol>
-<a id="more"></a>
 <hr>
 <p><strong>Part I: Create data in database</strong>  </p>
 <p>Use mysql to new a database with name ‘test’, and create a new table ‘product’. Below is the code:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; CREATE DATABASE test;  </span><br><span class="line">mysql&gt; USE test  </span><br><span class="line">mysql&gt; CREATE TABLE product (id Serial, name VARCHAR(20), descriptionVARCHAR(512));  </span><br><span class="line">mysql&gt; INSERT INTO product (name, description)</span><br><span class="line">    -&gt; VALUES (&apos;product1&apos;,&apos;this is a test&apos;);</span><br><span class="line">mysql&gt; INSERT INTO product (name, description)</span><br><span class="line">    -&gt; VALUES (&apos;product2&apos;,&apos;thisis another test&apos;);</span><br></pre></td></tr></table></figure></p>
