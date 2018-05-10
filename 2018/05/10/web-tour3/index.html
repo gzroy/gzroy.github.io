@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="Roy&#39;s Blog">
 <meta property="og:description" content="In previous blog, I have created a basic web app, the backend provides some REST APIs to manage products.In this blog, I will package these REST APIs as docker, and put in the server to run. Then I wi">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-05-10T07:28:31.356Z">
+<meta property="og:updated_time" content="2018-05-10T07:33:13.622Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Web APP series 3_Deploy as docker and add to API Gateway">
 <meta name="twitter:description" content="In previous blog, I have created a basic web app, the backend provides some REST APIs to manage products.In this blog, I will package these REST APIs as docker, and put in the server to run. Then I wi">
@@ -160,8 +160,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>In previous blog, I have created a basic web app, the backend provides some REST APIs to manage products.<br>In this blog, I will package these REST APIs as docker, and put in the server to run. Then I will register these APIs to the API gateway.<br><a id="more"></a></p>
-<p>##Create Docker:  </p>
-<ol>
+<h2 id="Create-Docker"><a href="#Create-Docker" class="headerlink" title="Create Docker:"></a>Create Docker:</h2><ol>
 <li>Install docker in server, refer to the docker website for the installation steps. After install the docker software, run the command ‘sudo docker pull java’, to obtain the Java docker image.</li>
 <li>Package the previous created REST APIs. Run the package command in the ‘Maven Projects’ of IDEA. After the package complete, there will be a JAR file in the target folder, upload the file to the server’s myweb folder. </li>
 <li><p>In the server’s myweb folder, create the ‘Dockerfile’, and input below commands in it:</p>
@@ -173,8 +172,7 @@
 </ol>
 <p>After the image created, type below command to run the image(the –net=’host’ option can let the container’s network connect with host, otherwise the host’s mysql service can not be visited. This option may has some security concern, will do more study later).<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run –net=’host’ myweb:0.1</span><br></pre></td></tr></table></figure></p>
 <p>As the image sucessfully run, open the url <a href="http://server" target="_blank" rel="noopener">http://server</a> ip:9090/all, you can see all the products are listed.</p>
-<p>##Configure KONG API Gateway</p>
-<ol>
+<h2 id="Configure-KONG-API-Gateway"><a href="#Configure-KONG-API-Gateway" class="headerlink" title="Configure KONG API Gateway"></a>Configure KONG API Gateway</h2><ol>
 <li><p>First install the postgresql, follow the postgresql website’s steps. Create the file /etc/apt/sources.list.d/pgdg.list, and insert the line ‘deb<a href="http://apt.postgresql.org/pub/repos/apt/" target="_blank" rel="noopener">http://apt.postgresql.org/pub/repos/apt/</a> xenial-pgdg main’ into the file, then run the below commands:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -  </span><br><span class="line">sudo apt-get update  </span><br><span class="line">Sudo apt-get install postgresql-10</span><br></pre></td></tr></table></figure>
 </li>
@@ -203,7 +201,7 @@
 </li>
 </ol>
 <p>Now all the APIs are registered in KONG API gateway.</p>
-<p>##Frontend code modify:##<br>Just simply modify the links point to the APIs to the new links point to the API gateway, in the product.service.ts file:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private productsUrl =&apos;http://server ip:8000/all&apos;;     </span><br><span class="line">private productDetailUrl =&apos;http:// server ip:8000/productdetail&apos;;  </span><br><span class="line">private productUpdateUrl =&apos;http:// server ip:8000/updateproduct&apos;;  </span><br><span class="line">private productCreateUrl =&apos;http:// server ip:8000/createproduct&apos;;  </span><br><span class="line">private productDeleteUrl =&apos;http:// server ip:8000/deleteproduct&apos;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Frontend-code-modify"><a href="#Frontend-code-modify" class="headerlink" title="Frontend code modify:"></a>Frontend code modify:</h2><p>Just simply modify the links point to the APIs to the new links point to the API gateway, in the product.service.ts file:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private productsUrl =&apos;http://server ip:8000/all&apos;;     </span><br><span class="line">private productDetailUrl =&apos;http:// server ip:8000/productdetail&apos;;  </span><br><span class="line">private productUpdateUrl =&apos;http:// server ip:8000/updateproduct&apos;;  </span><br><span class="line">private productCreateUrl =&apos;http:// server ip:8000/createproduct&apos;;  </span><br><span class="line">private productDeleteUrl =&apos;http:// server ip:8000/deleteproduct&apos;;</span><br></pre></td></tr></table></figure></p>
 <p>Start the web frontend, and visit the <a href="http://localhost:4200" target="_blank" rel="noopener">http://localhost:4200</a>, you can see the web act as before, it can sucessfully call the APIs via the gateway.</p>
 <p><strong>That’s all.</strong></p>
 
