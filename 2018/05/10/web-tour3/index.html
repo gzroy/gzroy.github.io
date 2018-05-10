@@ -6,15 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2018/5 | Roy&#39;s Blog</title>
+  <title>Web APP series 3_Deploy as docker and add to API Gateway | Roy&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Roy&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/archives/2018/05/index.html">
+  <meta name="description" content="In previous blog, I have created a basic web app, the backend provides some REST APIs to manage products.In this blog, I will package these REST APIs as docker, and put in the server to run. Then I wi">
+<meta name="keywords" content="Web Application">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web APP series 3_Deploy as docker and add to API Gateway">
+<meta property="og:url" content="http://yoursite.com/2018/05/10/web-tour3/index.html">
 <meta property="og:site_name" content="Roy&#39;s Blog">
+<meta property="og:description" content="In previous blog, I have created a basic web app, the backend provides some REST APIs to manage products.In this blog, I will package these REST APIs as docker, and put in the server to run. Then I wi">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-05-10T04:52:17.342Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Roy&#39;s Blog">
+<meta name="twitter:title" content="Web APP series 3_Deploy as docker and add to API Gateway">
+<meta name="twitter:description" content="In previous blog, I have created a basic web app, the backend provides some REST APIs to manage products.In this blog, I will package these REST APIs as docker, and put in the server to run. Then I wi">
   
     <link rel="alternative" href="/atom.xml" title="Roy&#39;s Blog" type="application/atom+xml">
   
@@ -134,36 +139,100 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-web-tour3" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Web APP series 3_Deploy as docker and add to API Gateway
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/10/web-tour3/" class="archive-article-date">
+
+        
+        <a href="/2018/05/10/web-tour3/" class="archive-article-date">
   	<time datetime="2018-05-10T04:07:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-10</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/10/web-tour3/">Web APP series 3_Deploy as docker and add to API Gateway</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>In previous blog, I have created a basic web app, the backend provides some REST APIs to manage products.<br>In this blog, I will package these REST APIs as docker, and put in the server to run. Then I will register these APIs to the API gateway.</p>
+<a id="more"></a>
+<p><strong>Create Docker:</strong></p>
+<ol>
+<li>Install docker in server, refer to the docker website for the installation steps. After install the docker software, run the command ‘sudo docker pull java’, to obtain the Java docker image.</li>
+<li>Package the previous created REST APIs. Run the package command in the ‘Maven Projects’ of IDEA. After the package complete, there will be a JAR file in the target folder, upload the file to the server’s myweb folder. </li>
+<li><p>In the server’s myweb folder, create the ‘Dockerfile’, and input below commands in it:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FROM java:latest  </span><br><span class="line">VOLUME /tmp  </span><br><span class="line">ADD myweb-0.0.1-SNAPSHOT.jar app.jar  </span><br><span class="line">RUN sh -c &apos;touch /app.jar&apos;  </span><br><span class="line">ENV JAVA_OPTS=&quot;&quot;  </span><br><span class="line">ENTRYPOINT [ &quot;sh&quot;, &quot;-c&quot;, &quot;java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar&quot; ]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Create the docker image in myweb folder, run the below commands:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker build -t myweb:0.1 .</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>After the image created, type below command to run the image(the –net=’host’ option can let the container’s network connect with host, otherwise the host’s mysql service can not be visited. This option may has some security concern, will do more study later).<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run –net=’host’ myweb:0.1</span><br></pre></td></tr></table></figure></p>
+<p>As the image sucessfully run, open the url <a href="http://server" target="_blank" rel="noopener">http://server</a> ip:9090/all, you can see all the products are listed.<br><strong>Configure KONG API Gateway</strong></p>
+<ol>
+<li><p>First install the postgresql, follow the postgresql website’s steps. Create the file /etc/apt/sources.list.d/pgdg.list, and insert the line ‘deb<a href="http://apt.postgresql.org/pub/repos/apt/" target="_blank" rel="noopener">http://apt.postgresql.org/pub/repos/apt/</a> xenial-pgdg main’ into the file, then run the below commands:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -  </span><br><span class="line">sudo apt-get update  </span><br><span class="line">Sudo apt-get install postgresql-10</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>After installed postgresql, run below command to create KONG user:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">createuser kong</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Type below commands to enter postgresql CLI and set the KONG password:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo -u postgres psql  </span><br><span class="line">\password kong  </span><br><span class="line">\q</span><br></pre></td></tr></table></figure></p>
+<p>Create the KONG database:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE kong OWNER kong</span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li>Install KONG, download the relate package in getkong.org, and run below commands:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update  </span><br><span class="line">sudo apt-get install openssl libpcre3 procps perl  </span><br><span class="line">sudo dpkg -i kong-community-edition-0.13.1.*.deb</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>After installation complete, go to the /etc/kong, backup the kong.conf, remove the annotate of the lines about the psql, and set the kong user’s password, then run the below command to migrate and run KONG:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kong migrations up [-c /etc/kong/kong.conf]  </span><br><span class="line">sudo kong start [-c /etc/kong/kong.conf]</span><br></pre></td></tr></table></figure></p>
+<p>Now visit the <a href="http://localhost:8001" target="_blank" rel="noopener">http://localhost:8001</a>, you can see the KONG configuration data.</p>
+<ol start="4">
+<li>Register the APIs to KONG. First we need to define several services, each correspond to a REST API.<br>Run the command to define the ‘get all products’ service:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/ \  </span><br><span class="line">--data &apos;name=get-all-products&apos; \  </span><br><span class="line">--data &apos;url=http://server ip:9090/all&apos;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Run the command to define the ‘get product detail’ service:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/ \  </span><br><span class="line">--data &apos;name=get-product&apos; \  </span><br><span class="line">--data &apos;url=http://server ip:9090/productdetail/&apos;</span><br></pre></td></tr></table></figure></p>
+<p>Run the command to define the ‘create product’ service:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/ \  </span><br><span class="line">--data &apos;name=create-product&apos; \  </span><br><span class="line">--data &apos;url=http://server ip:9090/createproduct/&apos;</span><br></pre></td></tr></table></figure></p>
+<p>Run the command to define the ‘update product’ service:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/ \  </span><br><span class="line">--data &apos;name=update-product&apos; \  </span><br><span class="line">--data &apos;url=http://server ip:9090/updateproduct/&apos;</span><br></pre></td></tr></table></figure></p>
+<p>Run the command to define the ‘delete product’ service:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/ \  </span><br><span class="line">--data &apos;name=delete-product&apos; \  </span><br><span class="line">--data &apos;url=http://server ip:9090/deleteproduct/&apos;</span><br></pre></td></tr></table></figure></p>
+<ol start="5">
+<li>Configure the routes for the services, as below commands:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/get-all-products/routes \  </span><br><span class="line">--data &apos;hosts[]=server ip&apos; \  </span><br><span class="line">--data &apos;paths[]=/all&apos;  </span><br><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/get-product/routes \  </span><br><span class="line">--data &apos;hosts[]=server ip&apos; \  </span><br><span class="line">--data &apos;paths[]=/productdetail&apos;  </span><br><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/create-product/routes \  </span><br><span class="line">--data &apos;hosts[]=server ip&apos; \  </span><br><span class="line">--data &apos;paths[]=/createproduct&apos;  </span><br><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/update-product/routes \  </span><br><span class="line">--data &apos;hosts[]=server ip&apos; \  </span><br><span class="line">--data &apos;paths[]=/updateproduct&apos;  </span><br><span class="line">curl -i -X POST \  </span><br><span class="line">--url http://localhost:8001/services/delete-product/routes \  </span><br><span class="line">--data &apos;hosts[]=server ip&apos; \  </span><br><span class="line">--data &apos;paths[]=/deleteproduct&apos;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>Now all the APIs are registered in KONG API gateway.<br><strong>Frontend code modify:</strong><br>Just simply modify the links point to the APIs to the new links point to the API gateway, in the product.service.ts file:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">private productsUrl =&apos;http://server ip:8000/all&apos;;     </span><br><span class="line">private productDetailUrl =&apos;http:// server ip:8000/productdetail&apos;;  </span><br><span class="line">private productUpdateUrl =&apos;http:// server ip:8000/updateproduct&apos;;  </span><br><span class="line">private productCreateUrl =&apos;http:// server ip:8000/createproduct&apos;;  </span><br><span class="line">private productDeleteUrl =&apos;http:// server ip:8000/deleteproduct&apos;;</span><br></pre></td></tr></table></figure></p>
+<p>Start the web frontend, and visit the <a href="http://localhost:4200" target="_blank" rel="noopener">http://localhost:4200</a>, you can see the web act as before, it can sucessfully call the APIs via the gateway.<br>That’s all.</p>
 
-        <div class="article-info info-on-right">
-          
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -175,122 +244,126 @@
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2018/05/10/web-tour3/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/08/web-tour2/" class="archive-article-date">
-  	<time datetime="2018-05-08T05:47:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-08</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2018/05/08/web-tour2/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Web APP series 2_Add CRUD funcitons and Frontend Routes</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/08/web-tour2/">Web APP series 2_Add CRUD funcitons and Frontend Routes</a>
-    </h1>
+  <div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="web-tour3" data-title="Web APP series 3_Deploy as docker and add to API Gateway" data-url="http://yoursite.com/2018/05/10/web-tour3/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+  
+  
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Web Application</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/01/web-tour/" class="archive-article-date">
-  	<time datetime="2018-05-01T05:32:12.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/01/web-tour/">Web APP Series 1_A simple Frontend/Backend Web</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Web Application</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/05/01/welcome/" class="archive-article-date">
-  	<time datetime="2018-05-01T05:19:18.364Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-01</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/05/01/welcome/">Welcome</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -313,8 +386,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
